@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>レンズの仕組み</title>
+    <link rel="icon" type="image/png" href="https://drive.google.com/uc?id=1gSe-v4qfUHP_vrhCQMg0RSmkOYpbbzT6&png" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      /* SVG要素を中央に配置 */
+      #svg-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <center>
+      レンズからの距離<input type="range" id="length" min="1" max="500" value="25" oninput="draw()"><span id="show-length"></span>
+    </center>
+    <div id="svg-container">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000" id="svg">
+      </svg>
+    </div>
+    <script>
+      function draw() {
+        var length = Number($("#length").val());
+        $('#show-length').html((length / 25).toFixed(2).toString().padStart(5,'0'));
+        let svg= $("#svg");
+        svg.html("");
+        svg.append("<polyline stroke-width='1' stroke='#000' points='500,800 500,200' />");
+        svg.append("<polyline stroke-width='1' stroke='#000' points='0,500 1000,500' />");
+        svg.append("<polyline stroke-width='1' stroke='#000' points='0,400 500,400' />");
+        svg.append("<polyline stroke-width='1' stroke='#000' points='0,0 1000,800' />");
+        svg.append("<circle stroke-width='5' stroke='#000' cx='375' cy='500' r='2' />");
+        svg.append("<circle stroke-width='5' stroke='#000' cx='625' cy='500' r='2' />");
+        svg.append("<circle stroke-width='5' stroke='#f00' cx='250' cy='500' r='2' />");
+        svg.append("<circle stroke-width='5' stroke='#f00' cx='750' cy='500' r='2' />");
+        svg.append("<polyline stroke-width='2' stroke='#000' points='" + (500 - length) + ",500 " + (500 - length) + ",400 " + (495 - length) + ",405 " + (505 - length) + ",405 " + (500 - length) + ",400' />");
+        svg.append("<polyline stroke-width='1' stroke='#000' points='" + (500 - 5 * length) + ",0 " + (500 + 5* length) + ",1000' />");
+        let vertexX = (500 - 50000 / length) / (0.8 - 100 / length);
+        if (vertexX != NaN && vertexX != Infinity) {
+          let vertexY = 0.8 * vertexX;
+          if(vertexY < 500){
+            svg.append("<polyline stroke-width='2' stroke='#00f' points='" + vertexX + ",500 " + vertexX + "," + vertexY + " " + (vertexX - 5) + "," + (vertexY + 5) + " " + (vertexX + 5) + "," + (vertexY + 5) + " " + vertexX + "," + vertexY + "' />");
+          } else{
+            svg.append("<polyline stroke-width='2' stroke='#00f' points='" + vertexX + ",500 " + vertexX + "," + vertexY + " " + (vertexX - 5) + "," + (vertexY - 5) + " " + (vertexX + 5) + "," + (vertexY - 5) + " " + vertexX + "," + vertexY + "' />");
+          }
+        }
+        svg.html(svg.html());
+      }
+      draw();
+    </script>
+  </body>
+</html>
