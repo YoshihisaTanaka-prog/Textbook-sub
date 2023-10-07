@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>鏡に映る範囲</title>
+    <link rel="icon" type="image/png" href="https://drive.google.com/uc?id=1gSe-v4qfUHP_vrhCQMg0RSmkOYpbbzT6&png" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <center>
+      <table>
+        <tr><td>鏡の大きさ</td><td><input type="range" id="mirror-length" min="1" max="900" value="200" oninput="draw()"><span id="span-mirror-length"></span></td></tr>
+        <tr><td>鏡の高さ</td><td><input type="range" id="mirror-height" min="0" max="900" value="800" oninput="draw()"><span id="span-mirror-height"></span></td></tr>
+        <tr><td>目線の高さ</td><td><input type="range" id="eye-height" min="0" max="999" value="900" oninput="draw()"><span id="span-eye-height"></span></td></tr>
+        <tr><td>鏡からの距離</td><td><input type="range" id="distance" min="1" max="500" value="200" oninput="draw()"><span id="span-distance"></span></td></tr>
+      </table>
+    </center>
+    <center>
+      <svg id="svg" width="1000" height="1000" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+      </svg>
+    </center>
+    <script>
+      function draw() {
+        let length = Number($("#mirror-length").val());
+        $("#span-mirror-length").html(length.toString().padStart(3,'0'));
+        let height = Number($("#mirror-height").val());
+        $("#span-mirror-height").html(height.toString().padStart(3,'0'));
+        let maxHeight = Number($("#mirror-height").attr("max"));
+        let eyeHeight = Number($("#eye-height").val());
+        $("#span-eye-height").html(eyeHeight.toString().padStart(3,'0'));
+        let distance = Number($("#distance").val());
+        $("#span-distance").html(distance.toString().padStart(3,"0"));
+
+        let svg = $("#svg");
+        svg.html("");
+
+        svg.append("<polyline stroke-width='5' stroke='#acf' points='500," + (maxHeight - height) + " 500," + (length - height + maxHeight) + "'></polyline>");
+        svg.append("<polyline stroke-width='1' stroke='#000' points='500," + (length + maxHeight - height) + " 500,1000'></polyline>");
+        svg.append("<polyline stroke-width='1' stroke='#000' points='500," + (maxHeight - height) + " 500,0'></polyline>");
+
+        svg.append("<polyline stroke-width='2' stroke='#000' points='" + (500 - distance) + ",0 " + (500 - distance) + ",1000'></polyline>");
+        svg.append("<circle stroke='#000' cx='" + (500 - distance) + "' cy='" + (1000 - eyeHeight) + "' r='5'></circle>");
+        svg.append("<polyline stroke-width='2' stroke='#000' fill='none' points='" + (500 - distance) + "," + (1007 - eyeHeight) + " " + (480 - distance) + "," + (1000 - eyeHeight) + " " + (500 - distance) + "," + (993 - eyeHeight) + "'></polyline>");
+
+        svg.append("<polyline stroke-width='1' stroke='#000' points='" + (500 - distance) + "," + (1000 - eyeHeight) + " 1000," + (maxHeight - height + (maxHeight + eyeHeight - height - 1000) * 500 / distance) + "'></polyline>");
+        svg.append("<polyline stroke-width='1' stroke='#000' points='" + (500 - distance) + "," + (1000 - eyeHeight) + " 1000," + (length + maxHeight - height + (length + maxHeight + eyeHeight - height - 1000) * 500 / distance) + "'></polyline>");
+
+        svg.append("<polyline stroke-width='1' stroke='#000' points='" + (500 + distance) + ",0 " + (500 + distance) + ",1000'></polyline>");
+        svg.append("<polyline stroke-width='5' stroke='#000' points='" + (500 + distance) + "," + (2* maxHeight + eyeHeight - 1000 - 2 * height) + " " + (500 + distance) + "," + (eyeHeight + 2 * maxHeight + 2 * length - 2 * height - 1000) + "'></polyline>");
+        svg.append("<circle stroke='#000' cx='" + (500 + distance) + "' cy='" + (1000 - eyeHeight) + "' r='5'></circle>");
+        svg.append("<polyline stroke-width='2' stroke='#000' fill='none' points='" + (500 + distance) + "," + (1007 - eyeHeight) + " " + (520 + distance) + "," + (1000 - eyeHeight) + " " + (500 + distance) + "," + (993 - eyeHeight) + "'></polyline>");
+
+        svg.append("<polyline stroke-width='1' stroke='#000' points='0," + (2* maxHeight + eyeHeight - 1000 - 2 * height) + " 1000," + (2* maxHeight + eyeHeight - 1000 - 2 * height) + "'></polyline>");
+        svg.append("<polyline stroke-width='1' stroke='#000' points='0," + (eyeHeight + 2 * maxHeight + 2 * length - 2 * height - 1000) + " 1000," + (eyeHeight + 2 * maxHeight + 2 * length - 2 * height - 1000) + "'></polyline>");
+
+        svg.html(svg.html());
+      }
+      draw();
+    </script>
+  </body>
+</html>
