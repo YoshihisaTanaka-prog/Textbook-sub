@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>動点問題</title>
+    <link rel="icon" type="image/png" href="https://drive.google.com/uc?id=1gSe-v4qfUHP_vrhCQMg0RSmkOYpbbzT6&png" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <a href="index.html">トップへ</a>
+    <center>
+      <input type="range" id="seconds" min="0" max="8" step="0.01" value="0" oninput="draw()"><span id="seconds-span">0.00</span>秒後<br>
+      <svg id="svg" viewBox="0 0 1000 1000" width="1000" height="1000"></svg>
+    </center>
+    <script>
+      function draw() {
+        let svg = $("#svg");
+        let seconds = Number($("#seconds").val());
+        $('#seconds-span').html(seconds.toFixed(2).toString().padStart(4,'0'));
+        svg.html("<polyline stroke-width='1' stroke='#000' points='800,800 200,800 800,200 800,800' fill='none'></polyline><text x='190' y='815'>A</text><text x='815' y='815'>B</text><text x='815' y='200'>C</text>");
+        if(seconds <= 4){
+          svg.append("<polyline stroke-width='1' stroke='#000' points='200,800 " + (200 + 150 * seconds) + ",800 800," + (800 - 150 * seconds) + " 200,800' fill='#aaa' />");
+          svg.append("<circle stroke-width='1' stroke='#000' cx='" + (200 + 150 * seconds) + "' cy='800' r='5'></circle><text x='" + (205 + 150 * seconds) + "' y='815' >P</text>");
+          svg.append("<circle stroke-width='1' stroke='#000' cx='800' cy='" + (800 - 150 * seconds) + "' r='5'></circle><text x='805' y='" + (805 - 150 * seconds) + "' >Q</text>");
+          svg.append("<polyline stroke-width='3' stroke='#000' points='200,800 " + (200 + 150 * seconds) + ",800' fill='#aaa' />");
+          svg.append("<polyline stroke-width='3' stroke='#000' points='800," + (800 - 150 * seconds) + " 800,800' fill='#aaa' />");
+          svg.append("<text x='" + (200 + 75 * seconds) + "' y='840'>底辺：xcm=" + seconds.toFixed(2).toString().padStart(4,'0') + "cm</text>");
+          svg.append("<text x='820' y='" + (800 - 75 * seconds) + "'>高さ：xcm=" + seconds.toFixed(2).toString().padStart(4,'0') + "cm</text>");
+        } else{
+          svg.append("<polyline stroke-width='1' stroke='#000' points='200,800 800,200 800," + (1400 - 150 * seconds) + " 200,800' fill='#aaa' />");
+          svg.append("<circle stroke='#000' cx='800' cy='200' r='5'></circle><text x='805' y='205'>Q</text>");
+          svg.append("<circle stroke='#000' cx='800' cy='" + (1400 - 150 * seconds) + "' r='5'></circle><text x='805' y='" + (1415 - 150 * seconds) + "' >P</text>");
+          svg.append("<polyline stroke-width='3' stroke='#000' points='200,800 800,800' fill='#aaa' />");
+          svg.append("<polyline stroke-width='3' stroke='#000' points='800," + (1400 - 150 * seconds) + " 800,200' fill='#aaa' />");
+          svg.append("<text x='500' y='840'>高さ：4cm</text>");
+          svg.append("<text x='820' y='" + (800 - 75 * seconds) + "'>底辺：x-4cm=" + (seconds - 4).toFixed(2).toString().padStart(4,'0') + "cm</text>");
+        }
+        svg.html(svg.html());
+      }
+      window.onload = draw();
+    </script>
+  </body>
+</html>

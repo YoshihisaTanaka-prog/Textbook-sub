@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>動点問題</title>
+    <link rel="icon" type="image/png" href="https://drive.google.com/uc?id=1gSe-v4qfUHP_vrhCQMg0RSmkOYpbbzT6&png" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <a href="index.html">トップへ</a>
+    <center>
+      <input type="range" id="seconds" min="0" max="10" step="0.01" value="0" oninput="draw()"><span id="seconds-span">00.00</span>秒後<br>
+      <svg id="svg" viewBox="0 0 1600 600" width="1600" height="600"></svg>
+      <span id="y">x×x/2=0×0/2=00.00</span>
+    </center>
+    <script>
+      function draw() {
+        let svg = $("#svg");
+        let seconds = Number($("#seconds").val());
+        $('#seconds-span').html(seconds.toFixed(2).toString().padStart(5,'0'));
+        svg.html("<polyline stroke-width='1' stroke='#000' points='400,500 850,500 850,200 400,200 400,500' fill='none'></polyline>");
+        if(seconds <= 4){
+          svg.append("<polyline stroke-width='1' stroke='#000' points='" + (100 + 75*seconds) + ",500 " + (100 + 75*seconds) + ",200 " + (400 + 75*seconds) + ",500 " + (100 + 75*seconds) + ",500" + "' fill='none'></polyline>");
+          svg.append("<polyline stroke-width='1' stroke='#000' points='400,500 400," + (500 - 75*seconds) + " " + (400 + 75*seconds) + ",500 " + (100 + 75*seconds) + ",500" + "' fill='#aaa'></polyline>");
+          $("#y").text("x×x/2=" + seconds.toFixed(2).toString().padStart(5,'0') + "×" + seconds.toFixed(2).toString().padStart(5,'0') + "/2=" + (seconds*seconds/2).toFixed(2).toString().padStart(5,'0'));
+        } else if(seconds <= 6){
+          svg.append("<polyline stroke-width='1' stroke='#000' points='" + (100 + 75*seconds) + ",500 " + (100 + 75*seconds) + ",200 " + (400 + 75*seconds) + ",500 " + (100 + 75*seconds) + ",500" + "' fill='#aaa'></polyline>");
+          $("#y").text("4×4/2=08.00");
+        } else{
+          svg.append("<polyline stroke-width='1' stroke='#000' points='" + (100 + 75*seconds) + ",500 " + (100 + 75*seconds) + ",200 " + (400 + 75*seconds) + ",500 " + (100 + 75*seconds) + ",500" + "' fill='none'></polyline>");
+          svg.append("<polyline stroke-width='1' stroke='#000' points='" + (100 + 75*seconds) + ",500 " + (100 + 75*seconds) + ",200 850," + (950 - 75*seconds) + " 850,500 " + (100 + 75*seconds) + ",500' fill='#aaa'></polyline>");
+          $("#y").text("{4+(x-6)}×(10-x)/2=" + (seconds-2).toFixed(2).toString().padStart(5,'0') + "×" + (10-seconds).toFixed(2).toString().padStart(5,'0') + "/2=" + ((seconds - 2)*(10 - seconds)/2).toFixed(2).toString().padStart(5,'0'));
+        }
+        svg.html(svg.html());
+      }
+      window.onload = draw();
+    </script>
+  </body>
+</html>
