@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>補助教材-数学15</title>
+    <link rel="icon" type="image/png" href="https://drive.google.com/uc?id=1gSe-v4qfUHP_vrhCQMg0RSmkOYpbbzT6&png" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/three@0.146.0/build/three.min.js"></script>
+  </head>
+  <body style="margin: 0;">
+    <a href="math-15.html">戻る</a>
+    <p id="setting" align="center">
+      x軸回転<input type="range" id="x-rotation" min="0" max="6.283" value="0" step="0.001" />
+      y軸回転<input type="range" id="y-rotation" min="0" max="6.283" value="0" step="0.001" />
+      z軸回転<input type="range" id="z-rotation" min="0" max="6.283" value="0" step="0.001" />
+    </p>
+    <div>
+      <canvas id="canvas"></canvas>
+    </div>
+    <script>
+      window.onload = function() {
+        const renderer = new THREE.WebGLRenderer({
+          canvas: document.querySelector("#canvas")
+        });
+        const height = document.documentElement.clientHeight - $("#setting").height();
+        const width = document.documentElement.clientWidth;
+        renderer.setSize(width, height);
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
+        camera.position.set(0, 0, 1000);
+        const material = new THREE.LineBasicMaterial( { color: 0xffffff } );
+        var points = [];
+        points.push( new THREE.Vector3( -150, 150, -150 ) );
+        points.push( new THREE.Vector3( 150, 150, -150 ) );
+        points.push( new THREE.Vector3( 150, -150, -150 ) );
+        points.push( new THREE.Vector3( -150, -150, -150 ) );
+        points.push( new THREE.Vector3( -150, 150, -150 ) );
+        points.push( new THREE.Vector3( -150, 150, 150 ) );
+        points.push( new THREE.Vector3( 150, 150, 150 ) );
+        points.push( new THREE.Vector3( 150, 150, -150 ) );
+        points.push( new THREE.Vector3( 150, 150, 150 ) );
+        points.push( new THREE.Vector3( 150, -150, 150 ) );
+        points.push( new THREE.Vector3( 150, -150, -150 ) );
+        points.push( new THREE.Vector3( 150, -150, 150 ) );
+        points.push( new THREE.Vector3( -150, -150, 150 ) );
+        points.push( new THREE.Vector3( -150, -150, -150 ) );
+        points.push( new THREE.Vector3( -150, -150, 150 ) );
+        points.push( new THREE.Vector3( -150, 150, 150 ) );
+        points.push( new THREE.Vector3( -150, 50, 150 ) );
+        points.push( new THREE.Vector3( 150, 50, 150 ) );
+        points.push( new THREE.Vector3( 150, 150, -50 ) );
+        points.push( new THREE.Vector3( -150, 150, -50 ) );
+        points.push( new THREE.Vector3( -150, 50, 150 ) );
+        const geometry = new THREE.BufferGeometry().setFromPoints( points );
+        const line = new THREE.Line( geometry, material );
+        scene.add( line );
+        tick();
+
+        function tick() {
+          requestAnimationFrame(tick);
+
+          // 箱を回転させる
+          line.rotation.x = Number($("#x-rotation").val());
+          line.rotation.y = Number($("#y-rotation").val());
+          line.rotation.z = Number($("#z-rotation").val());
+
+          // レンダリング
+          renderer.render(scene, camera);
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>補助教材-数学15</title>
+    <link rel="icon" type="image/png" href="https://drive.google.com/uc?id=1gSe-v4qfUHP_vrhCQMg0RSmkOYpbbzT6&png" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/three@0.146.0/build/three.min.js"></script>
+  </head>
+  <body style="margin: 0;">
+    <div id="setting" align="center">
+      <a href="math-15.html">戻る</a>
+      <p>
+        x軸回転<input type="range" id="x-rotation" min="0" max="6.283" value="4.9" step="0.001" />
+        y軸回転<input type="range" id="y-rotation" min="0" max="6.283" value="0" step="0.001" />
+        z軸回転<input type="range" id="z-rotation" min="0" max="6.283" value="4.712" step="0.001" />
+      </p>
+      <p>
+        円錐の回転<input type="range" id="rotation" min="0" max="3" value="0" step="0.001" />
+      </p>
+    </div>
+    <div>
+      <canvas id="canvas"></canvas>
+    </div>
+    <script>
+      window.onload = function() {
+        const renderer = new THREE.WebGLRenderer({
+          canvas: document.querySelector("#canvas")
+        });
+        const height = document.documentElement.clientHeight - $("#setting").height();
+        const width = document.documentElement.clientWidth;
+        renderer.setSize(width, height);
+        var scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
+        camera.position.set(0, 0, 1000);
+        const whiteMaterial = new THREE.LineBasicMaterial( { color: 0xffffff } );
+        const blackMaterial = new THREE.LineBasicMaterial( { color: 0x000000 } );
+        const redMaterial = new THREE.LineBasicMaterial( { color: 0xff0000 } );
+        const blueMaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+        const yellowMaterial = new THREE.LineBasicMaterial( { color: 0xffff00 } );
+        var whitePoints = [];
+        var blackPoints = [];
+        var redPoints1 = [];
+        var redPoints2 = [];
+        var bluePoints1 = [];
+        var bluePoints2 = [];
+        var yellowPoints1 = [];
+        var yellowPoints2 = [];
+        var whiteGeometry = new THREE.BufferGeometry().setFromPoints( whitePoints );
+        var blackGeometry = new THREE.BufferGeometry().setFromPoints( blackPoints );
+        var redGeometry1 = new THREE.BufferGeometry().setFromPoints( redPoints1 );
+        var redGeometry2 = new THREE.BufferGeometry().setFromPoints( redPoints2 );
+        var blueGeometry1 = new THREE.BufferGeometry().setFromPoints( bluePoints1 );
+        var blueGeometry2 = new THREE.BufferGeometry().setFromPoints( bluePoints2 );
+        var yellowGeometry1 = new THREE.BufferGeometry().setFromPoints( yellowPoints1 );
+        var yellowGeometry2 = new THREE.BufferGeometry().setFromPoints( yellowPoints2 );
+        var whiteLine = new THREE.Line( whiteGeometry, whiteMaterial );
+        var blackLine = new THREE.Line( blackGeometry, blackMaterial );
+        var redLine1 = new THREE.Line( redGeometry1, redMaterial );
+        var redLine2 = new THREE.Line( redGeometry2, redMaterial );
+        var blueLine1 = new THREE.Line( blueGeometry1, blueMaterial );
+        var blueLine2 = new THREE.Line( blueGeometry2, blueMaterial );
+        var yellowLine1 = new THREE.Line( yellowGeometry1, yellowMaterial );
+        var yellowLine2 = new THREE.Line( yellowGeometry2, yellowMaterial );
+        tick();
+
+        function tick() {
+          requestAnimationFrame(tick);
+
+          const rotation = -Number($("#rotation").val());
+          const theta = Math.PI * 2 * rotation / 3;
+          whitePoints = [];
+          blackPoints = [];
+          redPoints1 = [];
+          redPoints2 = [];
+          bluePoints1 = [];
+          bluePoints2 = [];
+          yellowPoints1 = [];
+          yellowPoints2 = [];
+          for (var i = 0; i <=360; i++) {
+            const theta1 = Math.PI*i/180;
+            const x = (800/3 + 100/3*Math.cos(theta1))*Math.cos(theta) - 100*Math.sin(theta1)*Math.sin(theta);
+            const y = (800/3 + 100/3*Math.cos(theta1))*Math.sin(theta) + 100*Math.sin(theta1)*Math.cos(theta);
+            const z = 200*Math.sqrt(2)*(1-Math.cos(theta1))/3;
+            whitePoints.push( new THREE.Vector3( 0, 0, 0 ) );
+            whitePoints.push( new THREE.Vector3( x, y, z ));
+          }
+          blackPoints.push( new THREE.Vector3( 0, 0, 0 ) );
+          blackPoints.push( new THREE.Vector3( 800/3*Math.cos(theta), 800/3*Math.sin(theta), 200*Math.sqrt(2)/3 ) );
+          blackPoints.push( new THREE.Vector3( (800/3 + 100/3*Math.cos(-theta*3))*Math.cos(theta) - 100*Math.sin(-theta*3)*Math.sin(theta), (800/3 + 100/3*Math.cos(-theta*3))*Math.sin(theta) + 100*Math.sin(-theta*3)*Math.cos(theta), 200*Math.sqrt(2)*(1-Math.cos(-theta*3))/3 ) );
+          for (var i = 0; i <=360; i++) {
+            const theta1 = Math.PI*i/540;
+            const theta2 = Math.PI*i/540 + Math.PI*2/3;
+            const theta3 = Math.PI*i/540 + Math.PI*4/3;
+            const theta4 = Math.PI*i/180;
+            redPoints1.push( new THREE.Vector3( 300*Math.cos(theta1), 300*Math.sin(theta1), 0));
+            bluePoints1.push( new THREE.Vector3( 300*Math.cos(theta2), 300*Math.sin(theta2), 0));
+            yellowPoints1.push( new THREE.Vector3( 300*Math.cos(theta3), 300*Math.sin(theta3), 0));
+            const x = (800/3 + 100/3*Math.cos(theta4))*Math.cos(theta) - 100*Math.sin(theta4)*Math.sin(theta);
+            const y = (800/3 + 100/3*Math.cos(theta4))*Math.sin(theta) + 100*Math.sin(theta4)*Math.cos(theta);
+            const z = 200*Math.sqrt(2)*(1-Math.cos(theta4))/3;
+            if(rotation>-1){
+              yellowPoints2.push( new THREE.Vector3( x, y, z));
+            } else if(rotation>-2){
+              bluePoints2.push( new THREE.Vector3( x, y, z));
+            } else{
+              redPoints2.push( new THREE.Vector3( x, y, z));
+            }
+          }
+          whiteGeometry = new THREE.BufferGeometry().setFromPoints( whitePoints );
+          blackGeometry = new THREE.BufferGeometry().setFromPoints( blackPoints );
+          redGeometry1 = new THREE.BufferGeometry().setFromPoints( redPoints1 );
+          redGeometry2 = new THREE.BufferGeometry().setFromPoints( redPoints2 );
+          blueGeometry1 = new THREE.BufferGeometry().setFromPoints( bluePoints1 );
+          blueGeometry2 = new THREE.BufferGeometry().setFromPoints( bluePoints2 );
+          yellowGeometry1 = new THREE.BufferGeometry().setFromPoints( yellowPoints1 );
+          yellowGeometry2 = new THREE.BufferGeometry().setFromPoints( yellowPoints2 );
+          whiteLine = new THREE.Line( whiteGeometry, whiteMaterial );
+          blackLine = new THREE.Line( blackGeometry, blackMaterial );
+          redLine1 = new THREE.Line( redGeometry1, redMaterial );
+          redLine2 = new THREE.Line( redGeometry2, redMaterial );
+          blueLine1 = new THREE.Line( blueGeometry1, blueMaterial );
+          blueLine2 = new THREE.Line( blueGeometry2, blueMaterial );
+          yellowLine1 = new THREE.Line( yellowGeometry1, yellowMaterial );
+          yellowLine2 = new THREE.Line( yellowGeometry2, yellowMaterial );
+          scene = new THREE.Scene();
+          scene.add( whiteLine );
+          scene.add( blackLine );
+          scene.add( redLine1 );
+          scene.add( redLine2 );
+          scene.add( blueLine1 );
+          scene.add( blueLine2 );
+          scene.add( yellowLine1 );
+          scene.add( yellowLine2 );
+
+          // 箱を回転させる
+          whiteLine.rotation.x = Number($("#x-rotation").val());
+          whiteLine.rotation.y = Number($("#y-rotation").val());
+          whiteLine.rotation.z = Number($("#z-rotation").val());
+
+          blackLine.rotation.x = Number($("#x-rotation").val());
+          blackLine.rotation.y = Number($("#y-rotation").val());
+          blackLine.rotation.z = Number($("#z-rotation").val());
+          
+          redLine1.rotation.x = Number($("#x-rotation").val());
+          redLine1.rotation.y = Number($("#y-rotation").val());
+          redLine1.rotation.z = Number($("#z-rotation").val());
+          redLine2.rotation.x = Number($("#x-rotation").val());
+          redLine2.rotation.y = Number($("#y-rotation").val());
+          redLine2.rotation.z = Number($("#z-rotation").val());
+          
+          blueLine1.rotation.x = Number($("#x-rotation").val());
+          blueLine1.rotation.y = Number($("#y-rotation").val());
+          blueLine1.rotation.z = Number($("#z-rotation").val());
+          blueLine2.rotation.x = Number($("#x-rotation").val());
+          blueLine2.rotation.y = Number($("#y-rotation").val());
+          blueLine2.rotation.z = Number($("#z-rotation").val());
+
+          yellowLine1.rotation.x = Number($("#x-rotation").val());
+          yellowLine1.rotation.y = Number($("#y-rotation").val());
+          yellowLine1.rotation.z = Number($("#z-rotation").val());
+          yellowLine2.rotation.x = Number($("#x-rotation").val());
+          yellowLine2.rotation.y = Number($("#y-rotation").val());
+          yellowLine2.rotation.z = Number($("#z-rotation").val());
+
+          // レンダリング
+          renderer.render(scene, camera);
+        }
+      }
+    </script>
+  </body>
+</html>
