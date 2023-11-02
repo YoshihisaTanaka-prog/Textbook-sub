@@ -16,7 +16,7 @@
         z軸回転<input type="range" id="z-rotation" min="0" max="6.283" value="0" step="0.001" />
       </p>
       <p>
-        折る前<input type="range" id="rotation" min="0" max="1" value="0" step="0.001" />折った後
+        折る前<input type="range" id="rotation" min="0" max="1" value="0" step="0.001" />折った後　交点の位置：A<input type="range" id="position" min="-200" max="200" value="120">C
       </p>
     </div>
     <div>
@@ -34,19 +34,13 @@
         const camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
         camera.position.set(0, 0, 1000);
         const material = new THREE.LineBasicMaterial( { color: 0xffffff } );
+        const redMaterial = new THREE.LineBasicMaterial( { color: 0xff0000 } );
         var points = [];
-        points.push( new THREE.Vector3( -200, 200, 0 ) );
-        points.push( new THREE.Vector3( 0, -200, 0 ) );
-        points.push( new THREE.Vector3( 200, 0, 0 ) );
-        points.push( new THREE.Vector3( -200, 200, 0 ) );
-        points.push( new THREE.Vector3( -200, -200, 0 ) ); // 左下
-        points.push( new THREE.Vector3( 0, -200, 0 ) );
-        points.push( new THREE.Vector3( 200, -200, 0 ) );  // 右下
-        points.push( new THREE.Vector3( 200, 0, 0 ) );
-        points.push( new THREE.Vector3( 200, 200, 0 ) );   // 右上
-        points.push( new THREE.Vector3( -200, 200, 0 ) );
+        var redPoints = [];
         var geometry = new THREE.BufferGeometry().setFromPoints( points );
+        var redGeometry = new THREE.BufferGeometry().setFromPoints( [] );
         var line = new THREE.Line( geometry, material );
+        var redLine = new THREE.Line( redGeometry, redMaterial );
         scene.add( line );
         tick();
 
@@ -75,15 +69,29 @@
           points.push( new THREE.Vector3( 200, 0, 0 ) );
           points.push( new THREE.Vector3( x2, y2, z2 ) );   // 右上
           points.push( new THREE.Vector3( -200, 200, 0 ) );
+
+          x4 = Number($("#position").val());
+          redPoints = [];
+          redPoints.push( new THREE.Vector3( 0, -200, 0) );
+          redPoints.push( new THREE.Vector3( x4, 100 - x4/2, 0) );
+          redPoints.push( new THREE.Vector3( x2, y2, z2 ) );
+          
           geometry = new THREE.BufferGeometry().setFromPoints( points );
+          redGeometry = new THREE.BufferGeometry().setFromPoints( redPoints );
           line = new THREE.Line( geometry, material );
+          redLine = new THREE.Line( redGeometry, redMaterial );
           scene = new THREE.Scene();
           scene.add( line );
+          scene.add( redLine )
 
           // 箱を回転させる
           line.rotation.x = Number($("#x-rotation").val());
           line.rotation.y = Number($("#y-rotation").val());
           line.rotation.z = Number($("#z-rotation").val());
+          
+          redLine.rotation.x = Number($("#x-rotation").val());
+          redLine.rotation.y = Number($("#y-rotation").val());
+          redLine.rotation.z = Number($("#z-rotation").val());
 
           // レンダリング
           renderer.render(scene, camera);
