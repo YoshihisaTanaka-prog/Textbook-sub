@@ -19,16 +19,16 @@
         円錐の回転<input type="range" id="rotation" min="0" max="3" value="0" step="0.001" />
       </p>
     </div>
-    <div>
+    <center>
       <canvas id="canvas"></canvas>
-    </div>
+    </center>
     <script>
       window.onload = function() {
         const renderer = new THREE.WebGLRenderer({
           canvas: document.querySelector("#canvas")
         });
-        const height = document.documentElement.clientHeight - $("#setting").height();
-        const width = document.documentElement.clientWidth;
+        const height = (document.documentElement.clientHeight - $("#setting").height())*0.9;
+        const width = (document.documentElement.clientWidth)*0.9;
         renderer.setSize(width, height);
         var scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);

@@ -8,22 +8,22 @@
     <script src="https://unpkg.com/three@0.146.0/build/three.min.js"></script>
   </head>
   <body style="margin: 0;">
-    <a href="math-15.html">戻る</a>
     <p id="setting" align="center">
+      <a href="math-15.html">戻る</a>
       x軸回転<input type="range" id="x-rotation" min="0" max="6.283" value="0" step="0.001" />
       y軸回転<input type="range" id="y-rotation" min="0" max="6.283" value="0" step="0.001" />
       z軸回転<input type="range" id="z-rotation" min="0" max="6.283" value="0" step="0.001" />
     </p>
-    <div>
+    <center>
       <canvas id="canvas"></canvas>
-    </div>
+    </center>
     <script>
       window.onload = function() {
         const renderer = new THREE.WebGLRenderer({
           canvas: document.querySelector("#canvas")
         });
-        const height = document.documentElement.clientHeight - $("#setting").height();
-        const width = document.documentElement.clientWidth;
+        const height = (document.documentElement.clientHeight - $("#setting").height())*0.9;
+        const width = (document.documentElement.clientWidth)*0.9;
         renderer.setSize(width, height);
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
