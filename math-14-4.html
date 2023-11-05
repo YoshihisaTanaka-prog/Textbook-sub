@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>平面図形の教材</title>
+    <link rel="icon" type="image/png" href="https://drive.google.com/uc?id=1gSe-v4qfUHP_vrhCQMg0RSmkOYpbbzT6&png" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <a href="math-14.html">戻る</a>
+    <center>
+      <p>図の倍率<input id="scale" type="range" min="0.6" max="1.4" value="0.7" step="0.01" oninput="changedScale()"><span id="scale-span">0.70</span></p>
+      <p>Pのx座標<input type="range" value="1" min="-5" max="4" step="0.01" id="x" oninput="draw()"><span id="x-span">0.00</span></p>
+      <p>長さ：<span id="length"></span></p>
+    </center>
+    <center>
+      <svg id="svg"></svg>
+    </center>
+    <script>
+      let svg = $("#svg");
+      var scale = 1;
+      changedScale();
+
+      function changedScale() {
+        scale = Number($("#scale").val());
+        $("#scale-span").text(scale.toFixed(2).toString().padStart(4,'0'));
+        svg.attr("width", 1000*scale);
+        svg.attr("height", 800*scale);
+        svg.attr("viewBox", "0 0 " + 1000*scale + " " + 800*scale);
+        draw();
+      }
+      function draw() {
+        const x = Number($("#x").val());
+        const length = Math.sqrt((x+5)*(x+5) + 16) + Math.sqrt((4-x)*(4-x) + 4);
+        $("#length").text(length.toFixed(7).toString().padStart(10,'0'));
+        if(x < 0){
+          $("#x-span").html(x.toFixed(2).toString().padStart(4,'0'));
+        } else {
+          $("#x-span").html("<span style='color: #fff;'>-</span>" + x.toFixed(2).toString().padStart(4,'0'));
+        }
+        svg.html("");
+        svg.append("<polyline stroke-width='1' stroke='#000' points='" + 50*scale + "," + 400*scale + " " + 950*scale + "," + 400*scale + "' fill='#aaa'></polyline>");
+        svg.append("<polyline stroke-width='1' stroke='#000' points='" + 500*scale + "," + 50*scale + " " + 500*scale + "," + 750*scale + "' fill='#aaa'></polyline>");
+        svg.append("<polyline fill='none' stroke-width='1' stroke='#00f' points='" + 100*scale + "," + 80*scale + " " + (500 + x*80)*scale + "," + 400*scale + " " + 820*scale + "," + 240*scale + "'></polyline>");
+        svg.append("<polyline fill='none' stroke-width='1' stroke='#0f0' points='" + (500 + x*80)*scale + "," + 400*scale + " " + 820*scale + "," + 560*scale + "'></polyline>");
+        svg.append("<polyline fill='none' stroke-width='1' stroke='#000' points='" + 100*scale + "," + 80*scale + " " + 820*scale + "," + 240*scale + "'></polyline>");
+        svg.append("<circle cx='" + 100*scale + "' cy='" + 80*scale + "' r='3'></circle><text x='" + 100*scale + "' y='" + 60*scale + "'>A</text>");
+        svg.append("<circle cx='" + 820*scale + "' cy='" + 240*scale + "' r='3'></circle><text x='" + 830*scale + "' y='" + 240*scale + "'>B</text>");
+        svg.append("<circle cx='" + 820*scale + "' cy='" + 560*scale + "' r='3'></circle><text x='" + 830*scale + "' y='" + 560*scale + "'>B`</text>");
+        svg.append("<circle cx='" + (500 + x*80)*scale + "' cy='" + 400*scale + "' r='3'></circle><text x='" + (500 + x*80)*scale + "' y='" + 440*scale + "'>P</text>");
+        svg.html(svg.html());
+      }
+    </script>
+  </body>
+</html>

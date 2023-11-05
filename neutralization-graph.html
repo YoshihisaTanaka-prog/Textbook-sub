@@ -27,7 +27,6 @@
       var svg = $("#svg1");
       var scale = 1;
       changedScale();
-      draw();
       function changedMode(){
         if($("#mode").val() == "0"){
           $("#1").show();
@@ -36,6 +35,7 @@
           $("#1").hide();
           $("#2").show();
         }
+        draw();
       }
 
       function changedScale() {
