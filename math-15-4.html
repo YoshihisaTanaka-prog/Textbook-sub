@@ -85,6 +85,13 @@
             whitePoints.push( new THREE.Vector3( 0, 0, 0 ) );
             whitePoints.push( new THREE.Vector3( x, y, z ));
           }
+          const t = Math.PI*2/3;
+          whitePoints.push( new THREE.Vector3( 0, 0, 0 ));
+          whitePoints.push( new THREE.Vector3( 300, 0, 0));
+          whitePoints.push( new THREE.Vector3( 0, 0, 0 ));
+          whitePoints.push( new THREE.Vector3( 300*Math.cos(t), 300*Math.sin(t), 0));
+          whitePoints.push( new THREE.Vector3( 0, 0, 0 ));
+          whitePoints.push( new THREE.Vector3( 300*Math.cos(2*t), 300*Math.sin(2*t), 0));
           blackPoints.push( new THREE.Vector3( 0, 0, 0 ) );
           blackPoints.push( new THREE.Vector3( 800/3*Math.cos(theta), 800/3*Math.sin(theta), 200*Math.sqrt(2)/3 ) );
           blackPoints.push( new THREE.Vector3( (800/3 + 100/3*Math.cos(-theta*3))*Math.cos(theta) - 100*Math.sin(-theta*3)*Math.sin(theta), (800/3 + 100/3*Math.cos(-theta*3))*Math.sin(theta) + 100*Math.sin(-theta*3)*Math.cos(theta), 200*Math.sqrt(2)*(1-Math.cos(-theta*3))/3 ) );
