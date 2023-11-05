@@ -11,7 +11,7 @@
     <center>
       <p>図の倍率<input id="scale" type="range" min="0.6" max="1.4" value="0.7" step="0.01" oninput="changedScale()"><span id="scale-span">0.70</span></p>
       <p>Pのx座標<input type="range" value="1" min="-5" max="4" step="0.01" id="x" oninput="draw()"><span id="x-span">0.00</span></p>
-      <p>長さ：<span id="length"></span></p>
+      <p>周の長さ：<span id="length"></span></p>
     </center>
     <center>
       <svg id="svg"></svg>
@@ -31,7 +31,7 @@
       }
       function draw() {
         const x = Number($("#x").val());
-        const length = Math.sqrt((x+5)*(x+5) + 16) + Math.sqrt((4-x)*(4-x) + 4);
+        const length = Math.sqrt((x+5)*(x+5) + 16) + Math.sqrt((4-x)*(4-x) + 4) + Math.sqrt(81 + 4);
         $("#length").text(length.toFixed(7).toString().padStart(10,'0'));
         if(x < 0){
           $("#x-span").html(x.toFixed(2).toString().padStart(4,'0'));
