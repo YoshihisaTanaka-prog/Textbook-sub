@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>中和グラフ</title>
+    <link rel="icon" type="image/png" href="https://drive.google.com/uc?id=1gSe-v4qfUHP_vrhCQMg0RSmkOYpbbzT6&png" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <a href="index.html">トップへ</a>
+    <center>
+      <p>例<input id="mode" type="range" value="0" min="0" max="1" style="width: 2em;" onchange="changedMode()">問題</p>
+      <p>図の倍率<input id="scale" type="range" min="0.6" max="1.4" value="0.7" step="0.01" oninput="changedScale()"><span id="scale-span">0.70</span></p>
+      <p>加えた溶液の量<input type="range" value="0" min="0" max="6" step="0.01" id="amount" oninput="draw()"><span id="amount-span">0.00</span>mL</p>
+    </center>
+    <center id="1">
+      <b>例</b><br>
+      <svg id="svg1" width="1000" height="800" viewBox="0 0 1000 800">
+      </svg>
+    </center>
+    <center id="2" style="display: none;">
+      <b>□４</b><br>
+      <svg id="svg2" width="1000" height="800" viewBox="0 0 1000 800">
+      </svg>
+    </center>
+    <script>
+      var svg = $("#svg1");
+      var scale = 1;
+      changedScale();
+      draw();
+      function changedMode(){
+        if($("#mode").val() == "0"){
+          $("#1").show();
+          $("#2").hide();
+        } else{
+          $("#1").hide();
+          $("#2").show();
+        }
+      }
+
+      function changedScale() {
+        scale = Number($("#scale").val());
+        $("#scale-span").text(scale.toFixed(2).toString().padStart(4,'0'));
+        svg.attr("width", 1000*scale);
+        svg.attr("height", 800*scale);
+        svg.attr("viewBox", "0 0 " + 1000*scale + " " + 800*scale);
+        draw();
+      }
+
+      function draw() {
+        const amount = Number($("#amount").val());
+        $("#amount-span").text(amount.toFixed(2).toString().padStart(4,"0"));
+        svg.html("");
+        if($("#mode").val() == "0"){
+          svg.append("<polyline stroke-width='1' stroke='#000' points='" + 50*scale + "," + 50*scale + " " + 50*scale + "," + 750*scale + " " + 950*scale + "," + 750*scale + "' fill='none'></polyline>");
+          if(amount <= 3){
+            svg.append("<polyline stroke-width='1' stroke='#0f0' points='" + 50*scale + "," + 600*scale + " " + (50 + 150*amount)*scale + "," + 600*scale + "' fill='none'></polyline><text x='" + (50 + 150*amount)*scale + "' y='" + 600*scale + "' fill='#0f0'>Cl-</text>");
+            svg.append("<polyline stroke-width='1' stroke='#f00' points='" + 50*scale + "," + 600*scale + " " + (50 + 150*amount)*scale + "," + (600 + amount*50)*scale + "' fill='none'></polyline><text x='" + (50 + 150*amount)*scale + "' y='" + (620 + amount*50)*scale + "' fill='#f00'>H+</text>");
+            svg.append("<polyline stroke-width='1' stroke='#00f' points='" + 50*scale + "," + 750*scale + " " + (50 + 150*amount)*scale + "," + 750*scale + "' fill='none'></polyline><text x='" + (50 + 150*amount)*scale + "' y='" + 770*scale + "' fill='#00f'>OH-</text>");
+            svg.append("<polyline stroke-width='1' stroke='#000' points='" + 50*scale + "," + 750*scale + " " + (50 + 150*amount)*scale + "," + (750-50*amount)*scale + "' fill='none'></polyline><text x='" + (50 + 150*amount)*scale + "' y='" + (750-50*amount)*scale + "' fill='#000'>Na+</text>");
+            svg.append("<polyline stroke-width='2' stroke='#000' points='" + 50*scale + "," + 450*scale + " " + (50 + 150*amount)*scale + "," + 450*scale + "' fill='none'></polyline><text x='" + (50 + 150*amount)*scale + "' y='" + 450*scale + "' fill='#000'>合計</text>");
+          } else{
+            svg.append("<polyline stroke-width='1' stroke='#0f0' points='" + 50*scale + "," + 600*scale + " " + (50 + 150*amount)*scale + "," + 600*scale + "' fill='none'></polyline><text x='" + (50 + 150*amount)*scale + "' y='" + 600*scale + "' fill='#0f0'>Cl-</text>");
+            svg.append("<polyline stroke-width='1' stroke='#f00' points='" + 50*scale + "," + 600*scale + " " + 500*scale + "," + 750*scale + " " + (50 + 150*amount)*scale + "," + 750*scale + "' fill='none'></polyline><text x='" + (50 + 150*amount)*scale + "' y='" + 770*scale + "' fill='#f00'>H+</text>");
+            svg.append("<polyline stroke-width='1' stroke='#00f' points='" + 50*scale + "," + 750*scale + " " + 500*scale + "," + 750*scale + " " +  (50 + 150*amount)*scale + "," + (900 - 50*amount)*scale + "' fill='none'></polyline><text x='" + (50 + 150*amount)*scale + "' y='" + (920 - 50*amount)*scale + "' fill='#00f'>OH-</text>");
+            svg.append("<polyline stroke-width='1' stroke='#000' points='" + 50*scale + "," + 750*scale + " " + (50 + 150*amount)*scale + "," + (750-50*amount)*scale + "' fill='none'></polyline><text x='" + (50 + 150*amount)*scale + "' y='" + (750-50*amount)*scale + "' fill='#000'>Na+</text>");
+            svg.append("<polyline stroke-width='2' stroke='#000' points='" + 50*scale + "," + 450*scale + " " + 500*scale + "," + 450*scale + " " + (50 + 150*amount)*scale + "," + (750-100*amount)*scale + "' fill='none'></polyline><text x='" + (50 + 150*amount)*scale + "' y='" + (750-100*amount)*scale + "' fill='#000'>合計</text>");
+          }
+        } else{
+        }
+        svg.html(svg.html());
+      }
+    </script>
+  </body>
+</html>
