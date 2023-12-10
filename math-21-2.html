@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>補助教材-数学15</title>
+    <link rel="icon" type="image/png" href="https://drive.google.com/uc?id=1gSe-v4qfUHP_vrhCQMg0RSmkOYpbbzT6&png" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/three@0.146.0/build/three.min.js"></script>
+  </head>
+  <body style="margin: 0;">
+    <div id="setting" align="center">
+      <a href="math-15.html">戻る</a>
+      <p>
+        x軸回転<input type="range" id="x-rotation" min="0" max="6.283" value="0" step="0.001" />
+        y軸回転<input type="range" id="y-rotation" min="0" max="6.283" value="0" step="0.001" />
+        z軸回転<input type="range" id="z-rotation" min="0" max="6.283" value="0" step="0.001" />
+      </p>
+      <p>
+        ステップ<input type="range" id="step" min="1" max="3" value="1" onchange="setStep()"><span id="step-span">1</span>
+      </p>
+    </div>
+    <center>
+      <canvas id="canvas"></canvas>
+    </center>
+    <script>
+      var step = 1;
+      function setStep() {
+        step = Number($("#step").val());
+        $("#step-span").text(step);
+      }
+      window.onload = function() {
+        const renderer = new THREE.WebGLRenderer({
+          canvas: document.querySelector("#canvas")
+        });
+        const height = (document.documentElement.clientHeight - $("#setting").height())*0.9;
+        const width = (document.documentElement.clientWidth)*0.9;
+        renderer.setSize(width, height);
+        var scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
+        camera.position.set(0, 0, 1000);
+        const material = new THREE.LineBasicMaterial( { color: 0xffffff } );
+        const redMaterial = new THREE.LineBasicMaterial( { color: 0xff0000 } );
+        var points = [];
+        var redPoints = [];
+        var geometry = new THREE.BufferGeometry().setFromPoints( points );
+        var redGeometry = new THREE.BufferGeometry().setFromPoints( [] );
+        var line = new THREE.Line( geometry, material );
+        var redLine = new THREE.Line( redGeometry, redMaterial );
+        scene.add( line );
+        tick();
+
+        function tick() {
+          requestAnimationFrame(tick);
+          points = [];
+          points.push( new THREE.Vector3( 300*Math.sqrt(2), 300, 0 ) );
+          points.push( new THREE.Vector3( 0, 150, 0 ) );
+          points.push( new THREE.Vector3( 0, 0, 0 ) );
+          points.push( new THREE.Vector3( 300*Math.sqrt(2), 0, 0 ) );
+          points.push( new THREE.Vector3( 300*Math.sqrt(2), 300, 0 ) );
+
+          redPoints = [];
+          if(step > 1){
+            redPoints.push( new THREE.Vector3( 0, 0, 0 ) );
+            redPoints.push( new THREE.Vector3( -300*Math.sqrt(2), 0, 0 ) );
+            redPoints.push( new THREE.Vector3( 0, 150, 0 ) );
+          }
+
+          if(step > 2){
+            for (let i = 0; i<=360; i++) {
+              const theta = Math.PI*i / 180;
+              points.push( new THREE.Vector3( 300*Math.sqrt(2), 300*Math.cos(theta), 300*Math.sin(theta) ) );
+              redPoints.push( new THREE.Vector3( 0, 150*Math.cos(theta), 150*Math.sin(theta) ) );
+            }
+            points.push( new THREE.Vector3( 300*Math.sqrt(2), -300, 0 ) );
+            points.push( new THREE.Vector3( 0, -150, 0 ) );
+            redPoints.push( new THREE.Vector3( 0, -150, 0 ) );
+            redPoints.push( new THREE.Vector3( -300*Math.sqrt(2), 0, 0 ) );
+          }
+          
+          geometry = new THREE.BufferGeometry().setFromPoints( points );
+          redGeometry = new THREE.BufferGeometry().setFromPoints( redPoints );
+          line = new THREE.Line( geometry, material );
+          redLine = new THREE.Line( redGeometry, redMaterial );
+          scene = new THREE.Scene();
+          scene.add( line );
+          scene.add( redLine )
+
+          // 回転させる
+          line.rotation.x = Number($("#x-rotation").val());
+          line.rotation.y = Number($("#y-rotation").val());
+          line.rotation.z = Number($("#z-rotation").val());
+          
+          redLine.rotation.x = Number($("#x-rotation").val());
+          redLine.rotation.y = Number($("#y-rotation").val());
+          redLine.rotation.z = Number($("#z-rotation").val());
+
+          // レンダリング
+          renderer.render(scene, camera);
+        }
+      }
+    </script>
+  </body>
+</html>
