@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>補助教材-数学15</title>
+    <link rel="icon" type="image/png" href="https://drive.google.com/uc?id=1gSe-v4qfUHP_vrhCQMg0RSmkOYpbbzT6&png" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <center>
+      <p>図の倍率<input id="scale" type="range" min="0.6" max="1.4" value="0.7" step="0.01" oninput="changedScale()"><span id="scale-span">0.70</span></p>
+      <p>
+        Position<input type="range" value="0" min="0" max="120" step="0.01" id="position" oninput="draw()">
+      </p>
+    </center>
+    <center>
+      <svg id="svg"></svg>
+    </center>
+    <script>
+      let svg = $("#svg");
+      var scale = 1;
+      changedScale();
+
+      function changedScale() {
+        scale = Number($("#scale").val());
+        $("#scale-span").text(scale.toFixed(2).toString().padStart(4,'0'));
+        svg.attr("width", 1000*scale);
+        svg.attr("height", 1000*scale);
+        svg.attr("viewBox", "0 0 " + 1000*scale + " " + 1000*scale);
+        draw();
+      }
+      function draw() {
+
+        const theta = Math.PI*Number($("#position").val()) / 180;
+        svg.html("<circle stroke='black' stroke-width='1' cx='" + 500*scale + "' cy='" + 500*scale + "' r='" + 300*scale + "' fill='none'></circle>");
+        svg.append("<circle cx='" + (500*scale+300*scale*Math.sin(theta)) + "' cy='" + (500*scale-300*scale*Math.cos(theta)) + "' r='3'></circle>");
+        svg.append("<polyline stroke='black' stroke-width='1' fill='none' points='" + (500 + 150*Math.sqrt(3))*scale + "," + (650)*scale + " " + (500 - 150*Math.sqrt(3))*scale + "," + (650)*scale + " " + (500 + 300*Math.sin(theta))*scale + "," + (500 - 300*Math.cos(theta))*scale + "'></polyline>");
+        svg.append("<polyline stroke='black' stroke-width='1' fill='none' points='" + (500 + 150*Math.sqrt(3))*scale + "," + (650)*scale + " " + (500 - 150*Math.sqrt(3))*scale + "," + (650)*scale + " " + 500*scale + "," + 200*scale + " " + (500 + 150*Math.sqrt(3))*scale + "," + (650)*scale + "'></polyline>");
+        if(Number($("#position").val()) == 60){
+          const x = 150*Math.sqrt(3);
+          svg.append("<polyline stroke='black' stroke-width='1' fill='none' points='" + (500 + 300*Math.sin(theta))*scale + "," + (500 - 300*Math.cos(theta))*scale + " " + (500 + x)*scale + "," + 800*scale + "'></polyline>");
+        } else {
+          const a = (-2*Math.cos(theta)-1) / (Math.sqrt(3) - 2*Math.sin(theta));
+          const b = -150*(Math.sqrt(3)*a + 1);
+          const x = (-300 - b) / a
+          svg.append("<polyline stroke='black' stroke-width='1' fill='none' points='" + (500 + 300*Math.sin(theta))*scale + "," + (500 - 300*Math.cos(theta))*scale + " " + (500 + x)*scale + "," + 800*scale + "'></polyline>");
+        }
+
+        svg.html(svg.html());
+      }
+    </script>
+  </body>
+</html>
