@@ -18,7 +18,7 @@
     </center>
     <script>
       let svg = $("#svg");
-      var a = 0.75;
+      var a = 2;
       var scale = 1;
       var step = 1;
       changedScale();
@@ -67,7 +67,7 @@
             break;
           case 3:
             svg.append("<polyline fill='none' stroke='#000' stroke-width='0.5' points='" + (a*50+300)*scale + "," + (750-a*a*12.5)*scale + " " + (a*100+300)*scale + "," + (750-a*a*12.5)*scale + " " + (a*100+300)*scale + "," + (750-a*a*50)*scale + "' />");
-            svg.append("<circle cx='" + 450*scale + "' cy='" + 650*scale + "' r='5' />")
+            svg.append("<circle cx='" + 450*scale + "' cy='" + 650*scale + "' r='3' />")
             break;
         }
 
