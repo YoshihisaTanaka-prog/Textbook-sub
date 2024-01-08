@@ -9,7 +9,9 @@
   <body>
     <a href="math-n4.html">問題を選択</a>
     <div align="center" width="100%">
-      <p>図の倍率<input id="scale" type="range" min="0.6" max="1.4" value="0.7" step="0.01" oninput="changedScale()"><span id="scale-span">0.70</span></p>
+      <p>図の倍率<input id="scale" type="range" min="0.6" max="1.4" value="0.7" step="0.01" oninput="changedScale()"><span id="scale-span">0.70</span></p>0
+      <p><input type="radio" name="step" value="1" checked onclick="setStep()">(1)<input type="radio" name="step" value="2" onclick="setStep()">(2)<input type="radio" name="step" value="3" onclick="setStep()">(3)</p>
+      <div id="x-p"></div>
     </div>
     <center>
       <svg id="svg"></svg>
@@ -17,6 +19,8 @@
     <script>
       let svg = $("#svg");
       var scale = 1;
+      var step = 1;
+      var p = 0;
       changedScale();
 
       function changedScale() {
@@ -27,7 +31,49 @@
         svg.attr("viewBox", "0 0 " + 1000*scale + " " + 800*scale);
         draw();
       }
+
+      function setStep(){
+        step = Number($("input:radio[name='step']:checked").val());
+        if(step == 3){
+          $("#x-p").html("<p>Pのx座標<input id='p-val' type='range' min='0' max='4' value='0' step='0.01' oninput='setP()'></p>");
+        } else{
+          $("#x-p").html("");
+        }
+        draw();
+      }
+
+      function setP() {
+        p = Number($("#p-val").val());
+        draw();
+      }
+
       function draw() {
+        svg.html("<polyline fill='none' stroke='#000' stroke-width='1' points='" + 300*scale + ",0 " + 300*scale + ", " + 800*scale + "' /><polyline fill='none' stroke='#000' stroke-width='1' points='0," + 750*scale + " " + 1000*scale + ", " + 750*scale + "' />");
+        var points = "";
+        for (var i = -10000; i <= 10000; i++) {
+          let x = i/40;
+          let y = x*x;
+          points += (" " + (x*100+300)*scale + "," + (750-y*25)*scale )
+        }
+        svg.append("<polyline fill='none' stroke='#000' stroke-width='0.5' points='" + points + "' />");
+        svg.append("<circle cx='" + 100*scale + "' cy='" + 650*scale + "' r='3' />");
+        svg.append("<circle cx='" + 300*scale + "' cy='" + 550*scale + "' r='3' />");
+        svg.append("<circle cx='" + 700*scale + "' cy='" + 350*scale + "' r='3' />");
+        switch (step) {
+          case 1:
+            svg.append("<polyline fill='none' stroke='#000' stroke-width='0.5' points='" + 300*scale + "," + 550*scale + " " + 100*scale + "," + 650*scale + " " + 300*scale + "," + 750*scale + "' />");
+            svg.append("<polyline fill='none' stroke='#000' stroke-width='0.5' points='" + 100*scale + "," + 650*scale + " " + 300*scale + "," + 650*scale + " " + "' />");
+            break;
+          case 2:
+            svg.append("<polyline fill='none' stroke='#000' stroke-width='0.5' points='" + 100*scale + "," + 650*scale + " " + 700*scale + "," + 350*scale + "' />");
+            break;
+          case 3:
+            svg.append("<polyline fill='none' stroke='#000' stroke-width='0.5' points='" + 100*scale + "," + 650*scale + " " + 700*scale + "," + 350*scale + " " + 300*scale + "," + 750*scale + " " + 100*scale + "," + 650*scale + "' />");
+            svg.append("<polyline fill='none' stroke='#000' stroke-width='0.5' points='" + (300 + p*100)*scale + "," + 750*scale + " " + (300 + p*100)*scale + ",0' />");
+            svg.append("<polyline fill='#0f0' stroke='#000' stroke-width='0.5' points='" + (300 + p*100)*scale + "," + (750 - p*100)*scale + " " + (300 + p*100)*scale + "," + (550 - p*50)*scale + " " + 700*scale + "," + 350*scale + "' />");
+            break;
+        }
+
 
         svg.html(svg.html());
       }
