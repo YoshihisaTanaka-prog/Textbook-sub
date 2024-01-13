@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>入試総合演習5</title>
+    <link rel="icon" type="image/png" href="https://drive.google.com/uc?id=1gSe-v4qfUHP_vrhCQMg0RSmkOYpbbzT6&png" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <a href="math-n4.html">問題を選択</a>
+    <div align="center" width="100%">
+      <p>図の倍率<input id="scale" type="range" min="0.6" max="1.4" value="0.7" step="0.01" oninput="changedScale()"><span id="scale-span">0.70</span></p>
+      <p>
+        <input type="radio" name="step" value="1" checked onclick="setStep()">(1)
+        <input type="radio" name="step" value="2" onclick="setStep()">(3)-実験
+        <input type="radio" name="step" value="3" onclick="setStep()">(3)
+      </p>
+      <p id="cp" style="display: none;">
+        CP
+        <input id="a-val" type="range" min="0" max="11" value="2" step="0.01" oninput="setA()">
+        <span id="a-span">02.00</span>
+      </p>
+      <p id="test" style="display: none;">
+        Cの角度
+        <input id="theta-val" type="range" min="70" max="110" value="70" oninput="setTheta()">
+        <span id="theta-span">70</span>
+      </p>
+    </div>
+    <center>
+      <svg id="svg"></svg>
+    </center>
+    <script>
+      let svg = $("#svg");
+      var scale = 1;
+      var step = 1;
+      var a = 2;
+      var theta = Math.PI*7/18;
+      changedScale();
+
+      function changedScale() {
+        scale = Number($("#scale").val());
+        $("#scale-span").text(scale.toFixed(2).toString().padStart(4,'0'));
+        svg.attr("width", 1000*scale);
+        svg.attr("height", 800*scale);
+        svg.attr("viewBox", "0 0 " + 1000*scale + " " + 800*scale);
+        draw();
+      }
+
+      function setA() {
+        a = Number($("#a-val").val());
+        $("#a-span").text(a.toFixed(2).toString().padStart(5,'0'));
+        draw();
+      }
+      function setTheta() {
+        theta = Number($("#theta-val").val());
+        $("#theta-span").text(theta.toString().padStart(2,'0'));
+        theta = Math.PI*theta/180;
+        draw();
+      }
+
+      function setStep(){
+        step = Number($("input:radio[name='step']:checked").val());
+        switch (step) {
+          case 1:
+            $("#test").attr("style", "display: none;");
+            $("#cp").attr("style", "display: none;");
+            $("#a-val").val("2");
+            setA();
+            break;
+          case 2:
+            $("#test").attr("style", "");
+            $("#cp").attr("style", "display: none;");
+            break;
+          default:
+            $("#test").attr("style", "display: none;");
+            $("#cp").attr("style", "");
+            break;
+        }
+        draw();
+      }
+
+      function draw() {
+        if(step == 2){
+          svg.html("<polyline fill='none' stroke='#000' stroke-width='1' points='" +
+          300*scale + "," + 500*scale + " " +
+          900*scale + "," + 500*scale + " " +
+          (300 + 400*Math.cos(theta) )*scale + "," + (500 - 400*Math.sin(theta))*scale + " " +
+          300*scale + "," + 500*scale +
+          "' />");
+          svg.append("<text x='" + 280*scale + "' y='" + 520*scale + "'>C</text");
+          svg.append("<text x='" + 900*scale + "' y='" + 520*scale + "'>B</text");
+          svg.append("<text x='" + 600*scale + "' y='" + 520*scale + "'>a</text");
+          svg.append("<text x='" + (300 + 400*Math.cos(theta) )*scale + "' y='" + (490 - 400*Math.sin(theta))*scale + "'>A</text");
+          svg.append("<text x='" + (280 + 200*Math.cos(theta) )*scale + "' y='" + (500 - 200*Math.sin(theta))*scale + "'>b</text");
+          svg.append("<text x='" + (600 + 200*Math.cos(theta) )*scale + "' y='" + (500 - 200*Math.sin(theta))*scale + "'>c</text");
+          svg.append("<text x='" + 500*scale + "' y='" + 550*scale + "' >c=" + Math.sqrt( (6 - 4*Math.cos(theta))*(6 - 4*Math.cos(theta) ) + (4*Math.sin(theta))*(4*Math.sin(theta)) ) + "</text>");
+          svg.append("<text x='" + 400*scale + "' y='" + 580*scale + "' >√(a^2+b^2)=" + Math.sqrt(36 + 16) + "</text>");
+        } else{
+          svg.html("<polyline fill='none' stroke='#000' stroke-width='1' points='" +
+          500*scale + "," + 15*scale + " " +
+          290*scale + "," + 785*scale + " " +
+          710*scale + "," + 785*scale + " " +
+          710*scale + "," + 15*scale + " " +
+          500*scale + "," + 15*scale + " " +
+          710*scale + "," + (785 - a*70)*scale + " " +
+          290*scale + "," + 785*scale +
+          "' />");
+        }
+
+        svg.html(svg.html());
+      }
+    </script>
+  </body>
+</html>

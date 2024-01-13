@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>入試総合演習5</title>
+    <link rel="icon" type="image/png" href="https://drive.google.com/uc?id=1gSe-v4qfUHP_vrhCQMg0RSmkOYpbbzT6&png" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <a href="math-n5.html">問題を選択</a>
+    <div align="center" width="100%">
+      <p>
+        図の倍率
+        <input id="scale" type="range" min="0.6" max="1.4" value="0.7" step="0.01" oninput="changedScale()">
+        <span id="scale-span">0.70</span>
+      </p>
+      <p>
+        <input type="radio" name="step" value="1" checked onclick="setStep()">(1)
+        <input type="radio" name="step" value="2" onclick="setStep()">(2)
+        <input type="radio" name="step" value="3" onclick="setStep()">(3)-引かれる図形
+        <input type="radio" name="step" value="4" onclick="setStep()">(3)-引く図形
+      </p>
+      <p id="rotation" style="display: none;">回転角<input id="theta-val" type="range" min="0" max="45" value="40" step="1" oninput="setTheta()"><span id="theta-span">40°</span></p>
+    </div>
+    <center>
+      <svg id="svg"></svg>
+    </center>
+    <script>
+      let svg = $("#svg");
+      var scale = 1;
+      var step = 1;
+      var theta = Math.PI*2/9;
+      changedScale();
+
+      function changedScale() {
+        scale = Number($("#scale").val());
+        $("#scale-span").text(scale.toFixed(2).toString().padStart(4,'0'));
+        svg.attr("width", 1000*scale);
+        svg.attr("height", 800*scale);
+        svg.attr("viewBox", "0 0 " + 1000*scale + " " + 800*scale);
+        draw();
+      }
+
+      function setTheta() {
+        const a = Number($("#theta-val").val());
+        $("#theta-span").text(a.toString().padStart(2,'0') + "°");
+        theta = Math.PI * a / 180;
+        draw();
+      }
+
+      function setStep(){
+        step = Number($("input:radio[name='step']:checked").val());
+        if(step == 2){
+          $("#rotation").attr("style", "")
+        } else{
+          $("#rotation").attr("style", "display: none;")
+          switch (step) {
+            case 1:
+              $("#theta-val").val("40");
+              setTheta();
+              break;
+            default:
+              $("#theta-val").val("30");
+              setTheta();
+              break;
+          }
+        }
+        draw();
+      }
+
+      function draw() {
+        svg.html("<polyline fill='none' stroke='#000' stroke-width='1' points='" +
+        450*scale + "," + 750*scale + " "+
+        450*scale + "," + 250*scale + " "+
+        950*scale + "," + 250*scale + " "+
+        950*scale + "," + 750*scale + " "+
+        450*scale + "," + 750*scale +
+        "' />");
+
+        const c = Math.cos(theta);
+        const s = Math.sin(theta);
+        const c0 = 500;
+        const s0 = 500;
+
+        svg.append("<polyline fill='none' stroke='#000' stroke-width='1' points='" +
+        450*scale + "," + 750*scale + " "+
+        (450 - s*500 )*scale + "," + (750 - c*500 )*scale + " "+
+        (450 + c*c0 - s*s0 )*scale + "," + (750 - c*s0 - s*c0 )*scale + " "+
+        (450 + c*500 )*scale + "," + (750-s*500)*scale + " "+
+        450*scale + "," + 750*scale +
+        "' />");
+
+        if(step >= 3){
+          var points1 = "";
+          var points2 = "";
+          for (let i=0; i<=360; i++) {
+            var t = Math.PI*i/2160;
+            var ct = Math.cos(t);
+            var st = Math.sin(t);
+            points1 += ((450 - st*500 )*scale + "," + (750 - ct*500 )*scale + " ");
+            t = Math.PI*(360-i)/2160;
+            ct = Math.cos(t);
+            st = Math.sin(t);
+            points2 += ((450 + ct*c0 - st*s0 )*scale + "," + (750 - ct*s0 - st*c0 )*scale + " ");
+          }
+          svg.append("<polyline fill='none' stroke='#000' stroke-width='1' points='" +
+          points1 +
+          points2 +
+          450*scale + "," + 250*scale +
+          "' />");
+          switch (step) {
+            case 3:
+              svg.append("<polyline fill='#aaa' stroke='#000' stroke-width='1' points='" +
+              points2 +
+              450*scale + "," + 750*scale +
+              "' />");
+              var t = Math.PI/6;
+              var ct = Math.cos(t);
+              var st = Math.sin(t);
+              svg.append("<polyline fill='#aaa' stroke='#000' stroke-width='1' points='" +
+              950*scale + "," + 250*scale + " "+
+              450*scale + "," + 750*scale + " "+
+              (450 + ct*c0 - st*s0 )*scale + "," + (750 - ct*s0 - st*c0 )*scale + " " +
+              450*scale + "," + 750*scale + " "+
+              (450 - s*500 )*scale + "," + (750 - c*500 )*scale + " "+
+              (450 + ct*c0 - st*s0 )*scale + "," + (750 - ct*s0 - st*c0 )*scale +
+              "' />");
+              break;
+          
+            default:
+              svg.append("<polyline fill='#aaa' stroke='#000' stroke-width='1' points='" +
+              points1 +
+              450*scale + "," + 750*scale + " "+
+              (450 + ct*c0 - st*s0 )*scale + "," + (750 - ct*s0 - st*c0 )*scale + " " +
+              450*scale + "," + 250*scale + " "+
+              450*scale + "," + 750*scale + " "+
+              450*scale + "," + 250*scale + " "+
+              "' />");
+              break;
+          }
+        }
+
+        if (step == 2) {
+          svg.append("<polyline fill='none' stroke='#000' stroke-width='1' points='" +
+          (450 + c*500 )*scale + "," + (750-s*500)*scale + " " +
+          950*scale + "," + 250*scale + " "+
+          450*scale + "," + 750*scale + " "+
+          (450 + c*c0 - s*s0 )*scale + "," + (750 - c*s0 - s*c0 )*scale + " " +
+          450*scale + "," + 250*scale +
+          "' />");
+        }
+
+        svg.html(svg.html());
+      }
+    </script>
+  </body>
+</html>
