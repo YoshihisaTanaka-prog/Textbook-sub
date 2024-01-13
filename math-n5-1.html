@@ -195,12 +195,11 @@
               var points2 = [];
               var p = 17;
               var q = -50
-              points2.push(new THREE.Vector3( 240*scale,  q*scale, 0 ));
-              points2.push(new THREE.Vector3( 0,  100*scale, 0 ));
               points2.push(new THREE.Vector3( 240*scale,  p*scale, 320*scale ));
-              points2.push(new THREE.Vector3( 240*scale,  q*scale, 0 ));
               points2.push(new THREE.Vector3( 0,  -100*scale, 0 ));
+              points2.push(new THREE.Vector3( 240*scale,  q*scale, 0 ));
               points2.push(new THREE.Vector3( 240*scale,  p*scale, 320*scale ));
+              points2.push(new THREE.Vector3( 240*scale,  -100*scale, 0 ));
               
               var geometry2 = new THREE.BufferGeometry().setFromPoints( points2 );
               var line2 = new THREE.Line( geometry2, material );
