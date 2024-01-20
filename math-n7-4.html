@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>入試総合演習6</title>
+    <link rel="icon" type="image/png" href="https://drive.google.com/uc?id=1gSe-v4qfUHP_vrhCQMg0RSmkOYpbbzT6&png" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <a href="math-n7.html">問題を選択</a>
+    <div align="center" width="100%">
+      <p>
+        図の倍率
+        <input id="scale" type="range" min="0.6" max="1.4" value="0.7" step="0.01" oninput="changedScale()">
+        <span id="scale-span">0.70</span>
+      </p>
+      <p>
+        <input type="radio" name="step" value="1" checked onclick="setStep()">(1)
+        <input type="radio" name="step" value="2" onclick="setStep()">(2)
+      </p>
+    </div>
+    <center>
+      <svg id="svg"></svg>
+    </center>
+    <script>
+      let svg = $("#svg");
+      var scale = 1;
+      var step = 1;
+      changedScale();
+
+      function changedScale() {
+        scale = Number($("#scale").val());
+        $("#scale-span").text(scale.toFixed(2).toString().padStart(4,'0'));
+        svg.attr("width", 1000*scale);
+        svg.attr("height", 800*scale);
+        svg.attr("viewBox", "0 0 " + 1000*scale + " " + 800*scale);
+        draw();
+      }
+
+      function setStep(){
+        step = Number($("input:radio[name='step']:checked").val());
+        draw();
+      }
+
+      function draw() {
+        svg.html("");
+        switch (step) {
+          case 1:
+            const r3 = Math.sqrt(3);
+            const r13 = Math.sqrt(13);
+            svg.append("<polyline fill='none' stroke='#000' stroke-width='1' points='" +
+            500*scale + "," + 750*scale + " " +
+            500*scale + "," + (750 - 200*r13)*scale + " " +
+            (500-200*r3)*scale + "," + 750*scale + " " +
+            (500+200*r3)*scale + "," + 750*scale + " " +
+            500*scale + "," + (750 - 200*r13)*scale +
+            "' />");
+            svg.append("<text x='" + 500*scale + "' y='" + (740 - 200*r13)*scale + "'>O</text>");
+            svg.append("<text x='" + (500-200*r3)*scale + "' y='" + 780*scale + "'>B</text>");
+            svg.append("<text x='" + 500*scale + "' y='" + 780*scale + "'>N</text>");
+            svg.append("<text x='" + (500+200*r3)*scale + "' y='" + 780*scale + "'>C</text>");
+            break
+          case 2:
+            const r31 = Math.sqrt(31);
+            svg.append("<polyline fill='none' stroke='#000' stroke-width='1' points='" +
+            (500-r31*90)*scale + "," + 490*scale + " "+
+            500*scale + "," + 40*scale + " "+
+            (500+r31*90)*scale + "," + 490*scale + " " +
+            500*scale + "," + 760*scale + " "+
+            (500-r31*90)*scale + "," + 490*scale + " "+
+            (500+r31*90)*scale + "," + 490*scale + " " +
+            (500)*scale + "," + 760*scale + " " +
+            (500)*scale + "," + 40*scale +
+            "' />");
+            svg.append("<text x='" + (500-r31*90)*scale + "' y='" + 520*scale + "'>A</text>");
+            svg.append("<text x='" + 500*scale + "' y='" + 20*scale + "'>O</text>");
+            svg.append("<text x='" + 500*scale + "' y='" + 780*scale + "'>C</text>");
+            svg.append("<text x='" + (480+r31*90)*scale + "' y='" + 520*scale + "'>B</text>");
+            svg.append("<text x='" + 510*scale + "' y='" + 480*scale + "'>N</text>");
+            break;
+        }
+        
+        svg.html(svg.html());
+      }
+    </script>
+  </body>
+</html>

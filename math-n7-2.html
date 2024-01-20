@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>入試総合演習7</title>
+    <link rel="icon" type="image/png" href="https://drive.google.com/uc?id=1gSe-v4qfUHP_vrhCQMg0RSmkOYpbbzT6&png" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/three@0.146.0/build/three.min.js"></script>
+  </head>
+  <body style="margin: 0;">
+    <a href="math-n7.html">問題を選択</a>
+    <div id="setting" align="center">
+      <p>
+        図の倍率
+        <input id="scale" type="range" min="0.6" max="1.4" value="0.7" step="0.01" oninput="changedScale()">
+        <span id="scale-span">0.70</span>
+      </p>
+      <p id="rotation">
+        x軸回転<input type="range" id="x-rotation" min="0" max="6.283" value="0" step="0.001" oninput="draw()" />
+        y軸回転<input type="range" id="y-rotation" min="0" max="6.283" value="0" step="0.001" oninput="draw()" />
+        z軸回転<input type="range" id="z-rotation" min="0" max="6.283" value="0" step="0.001" oninput="draw()" />
+      </p>
+      <p id="time">
+        時間：
+        <input type="range" id="time-range" min="0" max="5" step="0.01" value="0" oninput="setTime()">
+        <span id="time-span">0.00</span>
+        秒後
+      </p>
+    </div>
+    <center>
+      <canvas id="canvas"></canvas>
+    </center>
+    <script>
+      var scale = 1;
+      var step = 1;
+      var width = 0;
+      var height = 0;
+      var time = 0;
+      const renderer = new THREE.WebGLRenderer({
+        canvas: document.querySelector("#canvas")
+      });
+      changedScale();
+
+      function changedScale() {
+        scale = Number($("#scale").val());
+        $("#scale-span").text(scale.toFixed(2).toString().padStart(4,'0'));
+        height = document.documentElement.clientHeight - $("#setting").height();
+        width = document.documentElement.clientWidth;
+        renderer.setSize(width*scale, height*scale);
+        draw();
+      }
+
+      function setStep(){
+        step = Number($("input:radio[name='step']:checked").val());
+        draw();
+      }
+
+      function setTime() {
+        time = Number($("#time-range").val());
+        $("#time-span").text(time.toFixed(2).toString().padStart(4,'0'));
+        draw();
+      }
+
+      function draw() {
+        var scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
+        camera.position.set(0, 0, 1000*scale);
+        const material = new THREE.LineBasicMaterial( { color: 0xffffff } );
+        const redMaterial = new THREE.LineBasicMaterial( { color: 0xff0000 } );
+        var points = [];
+        points.push( new THREE.Vector3( -200*scale, -250*scale, 0 ) );
+        points.push( new THREE.Vector3( 200*scale, -250*scale, 0 ) );
+        points.push( new THREE.Vector3( 0, -250*scale, 300*scale ) );
+        points.push( new THREE.Vector3( -200*scale, -250*scale, 0 ) );
+        points.push( new THREE.Vector3( -200*scale, 250*scale, 0 ) );
+        points.push( new THREE.Vector3( 200*scale, 250*scale, 0 ) );
+        points.push( new THREE.Vector3( 200*scale, -250*scale, 0 ) );
+        points.push( new THREE.Vector3( 200*scale, 250*scale, 0 ) );
+        points.push( new THREE.Vector3( 0, 250*scale, 300*scale ) );
+        points.push( new THREE.Vector3( 0, -250*scale, 300*scale ) );
+        points.push( new THREE.Vector3( 0, 250*scale, 300*scale ) );
+        points.push( new THREE.Vector3( -200*scale, 250*scale, 0 ) );
+        var redPoints = [];
+        redPoints.push( new THREE.Vector3( -200*scale, -250*scale, 0));
+        redPoints.push( new THREE.Vector3( 0, (-250+100*time)*scale, 300*scale));
+        if(time < 2.5){
+          redPoints.push( new THREE.Vector3( 200*scale, (-250+200*time)*scale, 0));
+        } else{
+          redPoints.push( new THREE.Vector3( 200*scale, (750-200*time)*scale, 0));
+        }
+        var geometry = new THREE.BufferGeometry().setFromPoints( points );
+        var redGeometry = new THREE.BufferGeometry().setFromPoints( redPoints );
+        var line = new THREE.Line( geometry, material );
+        var redLine = new THREE.Line( redGeometry, redMaterial );
+        scene.add( line );
+        scene.add( redLine );
+
+        // 回転させる
+        line.rotation.x = Number($("#x-rotation").val());
+        line.rotation.y = Number($("#y-rotation").val());
+        line.rotation.z = Number($("#z-rotation").val());
+
+        redLine.rotation.x = Number($("#x-rotation").val());
+        redLine.rotation.y = Number($("#y-rotation").val());
+        redLine.rotation.z = Number($("#z-rotation").val());
+
+        // レンダリング
+        renderer.render(scene, camera);
+      }
+    </script>
+  </body>
+</html>
